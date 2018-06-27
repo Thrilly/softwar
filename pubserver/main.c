@@ -1,8 +1,3 @@
-#include <czmq.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "global.h"
 #include "check_params.c"
 
@@ -20,13 +15,13 @@ int main(int argc, char *argv[])
 
     // Loop
     while (!zsys_interrupted) {
-        sleep(CYCLE)
-        char message[1024];
-
-        if (!fgets(message, 1024, stdin)) {
-            break;
-        }
+        gameinfo_to_json(gameinfo);
+        // puts("\x1B[2J");
+        char message[1024] = "#general: SALUT\n\0";
+        printf("%s", message);
         zstr_sendf(chat_srv_socket, "%s", message);
+        usleep(atoi(CYCLE));
+
     }
     zsock_destroy(&chat_srv_socket);
     return 0;

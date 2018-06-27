@@ -1,16 +1,26 @@
-CFLAGS=-W -Wall -ansi -pedantic
-LDFLAGS=
+CC	= gcc
+NAME 	= my_ftl
+SRC	= air_shed.c \
+	container.c \
+	system_control.c \
+	system_repair.c \
+	my_string.c \
+	main.c
 
-all: pub
+OBJ 	= $(SRC:%.c=%.o)
+CFLAGS	= -W -Wall -Werror
 
-pub: pub_server.o
-	gcc -o server pub_server.o
+$(NAME):$(OBJ)
+	$(CC) $(CFLAGS) $(SRC) -o $(NAME)
 
-pub_server.o: pub_server.c
-	gcc -o pub_server.o -c pub_server.c $(LDFLAGS)
+all:	$(NAME)
+
+.PHONY:	clean
 
 clean:
-	rm -rf *.o
+	$(RM) $(OBJ)
 
-mrproper: clean
-	rm -rf hello
+fclean:	clean
+	$(RM)	$(NAME)
+
+re:	fclean all
