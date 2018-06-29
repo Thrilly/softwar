@@ -1,5 +1,5 @@
 #include "global.h"
-#include "check_params.c"
+#include "functions.c"
 
 int check_params(int argc, char *argv[]);
 
@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
     // Loop
     while (!zsys_interrupted) {
-        gameinfo_to_json(gameinfo);
+        // gameinfo_to_json(gameinfo);
         // puts("\x1B[2J");
         char message[1024] = "#general: SALUT\n\0";
         printf("%s", message);
