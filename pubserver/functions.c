@@ -43,7 +43,7 @@ int check_params(int argc, char *argv[])
     return 1;
 }
 
-void gameinfo_to_json(Gameinfo *gameinfo)
-{
-    printf("{\"map_size\": %s, \"game_status\" : %s}\n", gameinfo->map_size, gameinfo->game_status);
-}
+// void gameinfo_to_json(Gameinfo *gameinfo)
+// {
+//     printf("{\"map_size\": %s, \"game_status\" : %s}\n", gameinfo->map_size, gameinfo->game_status);
+// }

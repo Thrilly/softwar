@@ -47,10 +47,10 @@ typedef struct s_game_info {
 char PUBPORT[]  = "4243";
 char CYCLE[]    = "1000000";
 
-GameInfo *gameinfo;
-*gameinfo = malloc(sizeof(*gameinfo));
-gameinfo->map_size = 5;
-gameinfo->game_status = 0;
+// GameInfo *gameinfo;
+// *gameinfo = malloc(sizeof(*gameinfo));
+// gameinfo->map_size = 5;
+// gameinfo->game_status = 0;
 
 int check_params(int argc, char *argv[]);
-void gameinfo_to_json()
+// void gameinfo_to_json()
