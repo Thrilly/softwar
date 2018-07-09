@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     while (!zsys_interrupted) {
         // gameinfo_to_json(gameinfo);
         // puts("\x1B[2J");
-        char message[1024] = "#general: SALUT\n\0";
+        char message[1024] = "#general: TEST\n\0";
         printf("%s", message);
         zstr_sendf(chat_srv_socket, "%s", message);
         usleep(atoi(CYCLE));
