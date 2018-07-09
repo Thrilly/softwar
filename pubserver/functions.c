@@ -14,7 +14,7 @@ int check_params(int argc, char *argv[])
             if (strcmp(argv[i],"-pub-port") == 0) {
                 if (atoi(argv[i+1]) > 0 && atoi(argv[i+1]) < 65535) { // control data validity
                     strcpy(PUBPORT, argv[i+1]); // assing params
-                    // printf("[INFO] - Serveur listenning on tcp://*:%s \n", PUBPORT);
+                    printf("[INFO] - Serveur listenning on tcp://*:%s \n", PUBPORT);
                 } else { // else print error
                     printf("[ERROR] - Unable runing server : Invalid port, must be beetween 1 and 65535\n");
                     return 0;
@@ -23,7 +23,7 @@ int check_params(int argc, char *argv[])
             } else if(strcmp(argv[i],"-cycle") == 0) {
                 if (atoi(argv[i+1]) > 0 && atoi(argv[i+1]) <= 5000000) { // control data validity
                     strcpy(CYCLE, argv[i+1]); // assing params
-                    // printf("[INFO] - Serveur notify by %s microsecondes cycle \n", CYCLE);
+                    printf("[INFO] - Serveur notify by %s microsecondes cycle \n", CYCLE);
                 } else { // else print error
                     printf("[ERROR] - Unable runing server : Cannot set this cycle interval, must be beetween 100000 and 5000000\n");
                     return 0;
