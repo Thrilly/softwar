@@ -37,7 +37,8 @@ typedef struct s_energy_cells
     struct      s_energy_cells *next;
 } EnergyCell;
 
-typedef struct s_game_info {
+typedef struct s_game_info
+{
     int         map_size;
     int         game_status;
     // Players     *list_players;
@@ -47,10 +48,6 @@ typedef struct s_game_info {
 char PUBPORT[]  = "4243";
 char CYCLE[]    = "1000000";
 
-// GameInfo *gameinfo;
-// *gameinfo = malloc(sizeof(*gameinfo));
-// gameinfo->map_size = 5;
-// gameinfo->game_status = 0;
-
 int check_params(int argc, char *argv[]);
-// void gameinfo_to_json()
+void printfc(char* str, char* color);
+void gameinfo_to_json(GameInfo gameinfo);
