@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     printf("[INFO] - Serveur notify by %s microsecondes cycle \n", CYCLE);
     printfc("[SUCC] - Server is ready ! Start in 3 sec\n", "green");
 
+    // Gameinfo Initialisation
     GameInfo gameinfo;
     gameinfo.map_size = 5;
     gameinfo.game_status = 0;
@@ -24,24 +25,30 @@ int main(int argc, char *argv[])
     // Connect to socket
     zsock_t *chat_srv_socket = zsock_new(ZMQ_PUB);
     zsock_bind(chat_srv_socket, "tcp://*:%s", PUBPORT);
+
+    // main vars
     int loop = 0;
-    // Loop
+    int status = 1;
+    int pubPort = atoi(PUBPORT);
+    int cycle = atoi(CYCLE);
+
+    // Processus
     while (!zsys_interrupted) {
         loop++;
-        // gameinfo_to_json(gameinfo);
-        printf("\e[1;1H\e[2J");
-        printf("STATUS     | ");
-        printfc("RUNNING\n", "green");
-        printf("PKT SENDED | %i\n", loop);
-        printf("PUB PORT   | %s\n", PUBPORT);
-        printf("CYCLE      | %s\n", CYCLE);
-        printf("NB CONN    | %i\n", 0);
-        printf("MSG        | ");
-        gameinfo_to_json(gameinfo);
-        zstr_sendf(chat_srv_socket, "%s", "");
-        usleep(atoi(CYCLE));
+        char* msg = gameinfo_to_json(gameinfo);
 
+        if (status == 1) {
+            print_server_state(status, loop, pubPort, cycle, 0, msg);
+
+            zstr_sendf(chat_srv_socket, "%s%i", "#general: OK\n\0", loop);
+        }
+
+        free(msg);
+        usleep(atoi(CYCLE));
     }
+    status = 3;
+    print_server_state(status, loop, pubPort, cycle, 0, "- none -\n");
+
     zsock_destroy(&chat_srv_socket);
     return 0;
 }

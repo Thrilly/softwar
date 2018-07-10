@@ -48,6 +48,7 @@ typedef struct s_game_info
 char PUBPORT[]  = "4243";
 char CYCLE[]    = "1000000";
 
-int check_params(int argc, char *argv[]);
-void printfc(char* str, char* color);
-void gameinfo_to_json(GameInfo gameinfo);
+int     check_params(int argc, char *argv[]);
+void    printfc(char* str, char* color);
+char*   gameinfo_to_json(GameInfo gameinfo);
+void    print_server_state(int status, int loop, int pubPort, int cycle, int nbConn, char* msg);
