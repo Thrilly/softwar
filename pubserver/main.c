@@ -1,27 +1,35 @@
 #include "global.h"
-#include "functions.c"
+#include "params.h"
 
 int main(int argc, char *argv[])
 {
+    // Starting control
     printf("[INFO] - Starting server ...\n");
-
     if (!check_params(argc, argv)) {
         return 0;
     }
 
-    printf("[INFO] - Serveur listenning on tcp://*:%s \n", PUBPORT);
-    printf("[INFO] - Serveur notify by %s microsecondes cycle \n", CYCLE);
-    printfc("[SUCC] - Server is ready ! Start in 3 sec\n", "green");
+    //Notification Initialisation
+    NotificationType notificationType;
+    notificationType.cycle_info    = 0;
+	notificationType.game_started  = 1;
+	notificationType.game_finished = 2;
+	notificationType.client_dead   = 3;
+	notificationType.client_win    = 4;
 
-    // Gameinfo Initialisation
+    Player *list;
+    list = NULL;
+    list = add_player(list, "#0100", 1, 6, 50, 2);
+    list = add_player(list, "#0200", 6, 4, 50, 1);
+    list = add_player(list, "#0300", 4, 2, 50, 3);
+    list = add_player(list, "#0400", 3, 7, 50, 4);
+
+    //Game Initialisation
     GameInfo gameinfo;
     gameinfo.map_size = 5;
     gameinfo.game_status = 0;
 
-    for (int i = 0; i < 3; i++) {
-        printfc(".\n", "green");
-        sleep(1);
-    }
+
     // Connect to socket
     zsock_t *chat_srv_socket = zsock_new(ZMQ_PUB);
     zsock_bind(chat_srv_socket, "tcp://*:%s", PUBPORT);
@@ -35,10 +43,11 @@ int main(int argc, char *argv[])
     // Processus
     while (!zsys_interrupted) {
         loop++;
-        char* msg = gameinfo_to_json(gameinfo);
+        char* msg = notify(notificationType.cycle_info, gameinfo);
 
         if (status == 1) {
             print_server_state(status, loop, pubPort, cycle, 0, msg);
+            display_player_list(list);
 
             zstr_sendf(chat_srv_socket, "%s%i", "#general: OK\n\0", loop);
         }
@@ -47,7 +56,7 @@ int main(int argc, char *argv[])
         usleep(atoi(CYCLE));
     }
     status = 3;
-    print_server_state(status, loop, pubPort, cycle, 0, "- none -\n");
+    print_server_state(status, loop, pubPort, cycle, 0, "- null -\n");
 
     zsock_destroy(&chat_srv_socket);
     return 0;
