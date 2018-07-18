@@ -12,7 +12,11 @@
 
 typedef struct s_notification_type
 {
-    int notif;
+    int        cycle_info;
+	int        game_started;
+	int        game_finished;
+	int        client_dead;
+	int        client_win;
 } NotificationType;
 
 typedef struct s_player
@@ -22,35 +26,37 @@ typedef struct s_player
     int         y;
     int         energy;
     int         looking;
-    struct      s_players *prev;
-    struct      s_players *next;
-} Players;
+    struct      s_player *next;
+} Player;
 
-typedef struct s_energy_cells
+typedef struct s_energy_cell
 {
-    char       *name;
     int         x;
     int         y;
-    int         energy;
-    int         looking;
-    struct      s_energy_cells *prev;
-    struct      s_energy_cells *next;
+    int         value;
+    struct      s_energy_cell *next;
 } EnergyCell;
 
-typedef struct s_game_info {
+typedef struct s_game_info
+{
     int         map_size;
     int         game_status;
-    // Players     *list_players;
-    // EnergyCell  *list_energy_cell;
+    Player      *list_players;
+    EnergyCell  *list_energy_cell;
 } GameInfo;
 
-char PUBPORT[]  = "4243";
-char CYCLE[]    = "1000000";
+// Globals functions
+int         check_params(int argc, char *argv[]);
+void        printfc(char* str, char* color);
+char*       notify(int notificationType, GameInfo gameinfo, Player* list_players, EnergyCell* list_energy);
+void        print_server_state(int status, int loop, int pubPort, int cycle, int nbConn, char* msg);
 
-// GameInfo *gameinfo;
-// *gameinfo = malloc(sizeof(*gameinfo));
-// gameinfo->map_size = 5;
-// gameinfo->game_status = 0;
+// Playes functions
+Player	    *add_player(Player *list, char* name, int x, int y, int energy, int looking);
+char*        get_player_list(Player *list);
+Player	    *delete_player(char* name, Player *list);
 
-int check_params(int argc, char *argv[]);
-// void gameinfo_to_json()
+// Energy functions
+EnergyCell	*add_energy(EnergyCell *list, int x, int y, int value);
+EnergyCell	*delete_energy(int x, int y, EnergyCell *list);
+char* 	    get_energy_list(EnergyCell *list);

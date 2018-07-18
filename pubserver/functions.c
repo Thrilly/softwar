@@ -5,45 +5,51 @@
 //  Copyright © 2018 Brice Fouepe. All rights reserved.
 //
 
-int check_params(int argc, char *argv[])
-{
-    if(argc % 2 != 0){
-        for (int i = 1; i < argc; i= i+2) {
+#include <czmq.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "global.h"
 
-            // *********** PUB PORT ***********
-            if (strcmp(argv[i],"-pub-port") == 0) {
-                if (atoi(argv[i+1]) > 0 && atoi(argv[i+1]) < 65535) { // control data validity
-                    strcpy(PUBPORT, argv[i+1]); // assing params
-                    // printf("[INFO] - Serveur listenning on tcp://*:%s \n", PUBPORT);
-                } else { // else print error
-                    printf("[ERROR] - Unable runing server : Invalid port, must be beetween 1 and 65535\n");
-                    return 0;
-                }
-            // *********** CYCLE ***********
-            } else if(strcmp(argv[i],"-cycle") == 0) {
-                if (atoi(argv[i+1]) > 0 && atoi(argv[i+1]) <= 5000000) { // control data validity
-                    strcpy(CYCLE, argv[i+1]); // assing params
-                    // printf("[INFO] - Serveur notify by %s microsecondes cycle \n", CYCLE);
-                } else { // else print error
-                    printf("[ERROR] - Unable runing server : Cannot set this cycle interval, must be beetween 100000 and 5000000\n");
-                    return 0;
-                }
-            // *********** INVALID PARAMETER ***********
-            } else {
-                printf("[ERROR] - Unable runing server : Unknow parameter %s\n", argv[i]);
-                return 0;
-            }
-        }
-    // *********** INVALID PARAMETER NUMBER ***********
-    } else {
-        printf("[ERROR] - Unable runing server : Invalid number of parameters \n");
-        return 0;
+void printfc(char* str, char* color)
+{
+    if (strcmp(color,"green") == 0) {
+        printf("\x1B[32m%s", str);
+    } else if(strcmp(color,"red") == 0){
+        printf("\x1B[31m%s", str);
+    } else if(strcmp(color,"blue") == 0){
+        printf("\x1B[36m%s", str);
+    } else if(strcmp(color,"yellow") == 0){
+        printf("\x1B[33m%s", str);
     }
-    printf("[INFO] - Server is running ...\n");
-    return 1;
+    printf("\x1B[0m");
 }
 
-// void gameinfo_to_json(Gameinfo *gameinfo)
-// {
-//     printf("{\"map_size\": %s, \"game_status\" : %s}\n", gameinfo->map_size, gameinfo->game_status);
-// }
+char* notify(int notificationType, GameInfo gameinfo, Player* list_players, EnergyCell* list_energy)
+{
+    char* json = malloc(sizeof (char) * 1024);
+    if (1 == 2) {
+        sprintf(json, "{\"notification_type\": %i, \"data\" : {\"players\": %s, \"energy_cells\" : %s}}\n",notificationType, get_player_list(list_players), get_energy_list(list_energy));
+        sprintf(json, "{\"notification_type\": %i, \"data\" : {\"map_size\": %i, \"game_status\" : %i}}\n",notificationType, gameinfo.map_size, gameinfo.game_status);
+    } else {
+        sprintf(json, "{\"notification_type\": %i, \"data\" : {\"players\": %s, \"energy_cells\" : %s}}\n",notificationType, get_player_list(list_players), get_energy_list(list_energy));
+    }
+    return json;
+}
+
+void print_server_state(int status, int loop, int pubPort, int cycle, int nbConn, char* msg){
+    printf("\e[1;1H\e[2J");
+    printf("########## SOFTWAR SERVER V1.0 ##########\n\n");
+    printf("STATUS     | ");
+    if (status == 1) { printfc("RUNNING\n", "green"); }
+    else if (status == 2) { printfc("PAUSE\n", "yellow"); }
+    else if (status == 3) { printfc("STOPPED\n", "red"); }
+    printf("PKT SENDED | %i\n", loop);
+    printf("PUB PORT   | %i\n", pubPort);
+    printf("CYCLE      | %i ms\n", cycle);
+    printf("NB CONN    | %i\n", nbConn);
+    printf("MSG        | ");
+    printfc(msg, "blue");
+    printf("\n");
+    printf("##########################################\n");
+}

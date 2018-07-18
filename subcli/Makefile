@@ -1,13 +1,10 @@
-CC		= 	gcc
-NAME 	= 	server
-SRC		= 	functions.c \
-			player.c \
-			energy.c \
-			main.c
+CC		= gcc
+NAME 	= client
+SRC		= main.c
 
-OBJ 	= 	$(SRC:%.c=%.o)
-CFLAGS	= 	-W -Wall -Werror
-LIB		= 	-lzmq -lczmq
+OBJ 	= $(SRC:%.c=%.o)
+CFLAGS	= -W -Wall -Werror
+LIB		= -lzmq -lczmq
 
 $(NAME):$(OBJ)
 	$(CC) $(CFLAGS) $(SRC) -o $(NAME) $(LIB)
