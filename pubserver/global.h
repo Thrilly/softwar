@@ -31,11 +31,9 @@ typedef struct s_player
 
 typedef struct s_energy_cell
 {
-    char       *name;
     int         x;
     int         y;
-    int         energy;
-    int         looking;
+    int         value;
     struct      s_energy_cell *next;
 } EnergyCell;
 
@@ -47,9 +45,18 @@ typedef struct s_game_info
     EnergyCell  *list_energy_cell;
 } GameInfo;
 
-int     check_params(int argc, char *argv[]);
-void    printfc(char* str, char* color);
-char*   notify(int notificationType, GameInfo gameinfo);
-void    print_server_state(int status, int loop, int pubPort, int cycle, int nbConn, char* msg);
-Player	*add_player(Player *list, char* name, int x, int y, int energy, int looking);
-void	display_player_list(Player *list);
+// Globals functions
+int         check_params(int argc, char *argv[]);
+void        printfc(char* str, char* color);
+char*       notify(int notificationType, GameInfo gameinfo, Player* list_players, EnergyCell* list_energy);
+void        print_server_state(int status, int loop, int pubPort, int cycle, int nbConn, char* msg);
+
+// Playes functions
+Player	    *add_player(Player *list, char* name, int x, int y, int energy, int looking);
+char*        get_player_list(Player *list);
+Player	    *delete_player(char* name, Player *list);
+
+// Energy functions
+EnergyCell	*add_energy(EnergyCell *list, int x, int y, int value);
+EnergyCell	*delete_energy(int x, int y, EnergyCell *list);
+char* 	    get_energy_list(EnergyCell *list);

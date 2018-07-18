@@ -2,6 +2,7 @@ CC		= 	gcc
 NAME 	= 	server
 SRC		= 	functions.c \
 			player.c \
+			energy.c \
 			main.c
 
 OBJ 	= 	$(SRC:%.c=%.o)

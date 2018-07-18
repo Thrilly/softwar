@@ -4,7 +4,8 @@
 int main(int argc, char *argv[])
 {
     // Starting control
-    printf("[INFO] - Starting server ...\n");
+    printf("[INFO] - Checking params ...\n");
+    usleep(200000);
     if (!check_params(argc, argv)) {
         return 0;
     }
@@ -17,12 +18,18 @@ int main(int argc, char *argv[])
 	notificationType.client_dead   = 3;
 	notificationType.client_win    = 4;
 
-    Player *list;
-    list = NULL;
-    list = add_player(list, "#0100", 1, 6, 50, 2);
-    list = add_player(list, "#0200", 6, 4, 50, 1);
-    list = add_player(list, "#0300", 4, 2, 50, 3);
-    list = add_player(list, "#0400", 3, 7, 50, 4);
+    Player *list_players;
+    list_players = NULL;
+    list_players = add_player(list_players, "#0100", 1, 6, 50, 2);
+    list_players = add_player(list_players, "#0200", 6, 4, 50, 1);
+    list_players = add_player(list_players, "#0300", 4, 2, 50, 3);
+    list_players = add_player(list_players, "#0400", 3, 7, 50, 4);
+
+    //EnergyCell Init
+    EnergyCell *list_energy;
+    list_energy = NULL;
+    list_energy = add_energy(list_energy, 2, 4, 10);
+    list_energy = add_energy(list_energy, 1, 5, 20);
 
     //Game Initialisation
     GameInfo gameinfo;
@@ -43,15 +50,11 @@ int main(int argc, char *argv[])
     // Processus
     while (!zsys_interrupted) {
         loop++;
-        char* msg = notify(notificationType.cycle_info, gameinfo);
-
+        char* msg = notify(notificationType.cycle_info, gameinfo, list_players, list_energy);
         if (status == 1) {
             print_server_state(status, loop, pubPort, cycle, 0, msg);
-            display_player_list(list);
-
-            zstr_sendf(chat_srv_socket, "%s%i", "#general: OK\n\0", loop);
+            zstr_sendf(chat_srv_socket, "#general: %s\n", msg);
         }
-
         free(msg);
         usleep(atoi(CYCLE));
     }

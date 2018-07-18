@@ -25,10 +25,15 @@ void printfc(char* str, char* color)
     printf("\x1B[0m");
 }
 
-char* notify(int notificationType, GameInfo gameinfo)
+char* notify(int notificationType, GameInfo gameinfo, Player* list_players, EnergyCell* list_energy)
 {
     char* json = malloc(sizeof (char) * 1024);
-    sprintf(json, "{\"notification_type\": %i, \"data\" : {\"map_size\": %i, \"game_status\" : %i}}\n",notificationType, gameinfo.map_size, gameinfo.game_status);
+    if (1 == 2) {
+        sprintf(json, "{\"notification_type\": %i, \"data\" : {\"players\": %s, \"energy_cells\" : %s}}\n",notificationType, get_player_list(list_players), get_energy_list(list_energy));
+        sprintf(json, "{\"notification_type\": %i, \"data\" : {\"map_size\": %i, \"game_status\" : %i}}\n",notificationType, gameinfo.map_size, gameinfo.game_status);
+    } else {
+        sprintf(json, "{\"notification_type\": %i, \"data\" : {\"players\": %s, \"energy_cells\" : %s}}\n",notificationType, get_player_list(list_players), get_energy_list(list_energy));
+    }
     return json;
 }
 

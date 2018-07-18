@@ -51,8 +51,10 @@ int check_params(int argc, char *argv[])
 
     // *********** PRINT INFOS ***********
     printf("[INFO] - Serveur listenning on tcp://*:%s \n", PUBPORT);
+    usleep(200000);
     printf("[INFO] - Serveur notify by %s microsecondes cycle \n", CYCLE);
-    printfc("[SUCC] - Server is ready ! Start in 3 sec\n", "green");
-    sleep(3);
+    usleep(200000);
+    printfc("[SUCC] - Server is ready ! Starting server ...\n", "green");
+    sleep(1);
     return 1;
 }
