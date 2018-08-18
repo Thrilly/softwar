@@ -58,3 +58,14 @@ char*	get_energy_list(EnergyCell *list)
 
 	return json;
 }
+
+int destroy_energy(EnergyCell *list)
+{
+	EnergyCell *tmp;
+	while (list != NULL) {
+		tmp = list;
+		list = list->next;
+		free(tmp);
+	}
+	return 1;
+}

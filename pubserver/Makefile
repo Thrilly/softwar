@@ -7,7 +7,7 @@ SRC		= 	functions.c \
 
 OBJ 	= 	$(SRC:%.c=%.o)
 CFLAGS	= 	-W -Wall -Werror
-LIB		= 	-lzmq -lczmq
+LIB		= 	-lzmq -lczmq -lpthread
 
 $(NAME):$(OBJ)
 	$(CC) $(CFLAGS) $(SRC) -o $(NAME) $(LIB)

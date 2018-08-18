@@ -1,4 +1,5 @@
 
+char REQPORT[]  = "4242";
 char PUBPORT[]  = "4243";
 char CYCLE[]    = "1000000";
 char MAPSIZE[]  = "5";
@@ -19,10 +20,25 @@ int check_params(int argc, char *argv[])
                     return 0;
                 }
             } else { // else print error
-                printfc("[FAIL] - Port number is expected after --pub-port parameter\n", "red");
+                printfc("[FAIL] - PUB Port number is expected after --pub-port parameter\n", "red");
                 return 0;
             }
         // *********** END PUB PORT ***********
+
+        // *********** REQ PORT ***********
+        } else if (strcmp(argv[i],"--req-port") == 0) {
+            if (argv[i+1] != NULL) { // control if params value exist
+                if (atoi(argv[i+1]) > 0 && atoi(argv[i+1]) < 65535) { // control data validity
+                    strcpy(REQPORT, argv[i+1]); // assing params
+                } else { // else print error
+                    printfc("[FAIL] - Unable runing server : Invalid port, must be integer beetween 1 and 65535\n", "red");
+                    return 0;
+                }
+            } else { // else print error
+                printfc("[FAIL] - REQ Port number is expected after --req-port parameter\n", "red");
+                return 0;
+            }
+        // *********** END REQ PORT ***********
 
 
         // *********** CYCLE ***********
@@ -102,7 +118,10 @@ int check_params(int argc, char *argv[])
     if (VERBOSE == 1) {
         printf("[INFO] - Verbose mode actived \n");
         usleep(100000);
-        printf("[INFO] - Serveur listenning on tcp://*:%s \n", PUBPORT);
+        printf("[INFO] - Serveur socket ROUTER listenning on tcp://*:%s \n", REQPORT);
+        usleep(100000);
+        printf("[INFO] - Serveur socket PUB listenning on tcp://*:%s \n", PUBPORT);
+        usleep(100000);
         if (atoi(PUBPORT) < 1000) {
             printfc("[WARN] - It\'s recommanded to use port higher than 1000\n", "yellow");
             usleep(100000);
@@ -115,7 +134,11 @@ int check_params(int argc, char *argv[])
         usleep(100000);
     }
 
-    printfc("[SUCC] - Server is ready ! Starting server ...\n", "green");
-    sleep(1);
+    printfc("[SUCC] - Server is ready ! Starting server \n", "green");
+    for (int i = 0; i < WAIT_BEFORE_START_SERVER; i++) {
+        printfc(".\n", "green");
+        sleep(1);
+    }
+    printf("\n");
     return 1;
 }

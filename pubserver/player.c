@@ -43,6 +43,17 @@ Player *delete_player(char* name, Player *list)
     }
 }
 
+int destroy_players(Player *list)
+{
+	Player *tmp;
+	while (list != NULL) {
+		tmp = list;
+		list = list->next;
+		free(tmp);
+	}
+	return 1;
+}
+
 char*	get_player_list(Player *list)
 {
 	char* json = malloc(sizeof (char) * 1024);
@@ -90,14 +101,14 @@ int	move(char* name, int direction, int value, int map_size, Player *list)
 					return -1;
 				}
 			} else if (direction == 1) { // up
-				if (list->y + value < map_size) { // PUT MAPSIZE
+				if (list->y + value < map_size) {
 					list->y += value;
 					return 1;
 				} else {
 					return -1;
 				}
 			} else if (direction == 2) { // right
-				if (list->x + value < map_size) { // PUT MAPSIZE
+				if (list->x + value < map_size) {
 					list->x += value;
 					return 1;
 				} else {

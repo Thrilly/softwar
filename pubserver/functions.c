@@ -53,3 +53,32 @@ void print_server_state(int status, int loop, int pubPort, int cycle, int nbConn
     printf("\n");
     printf("##########################################\n");
 }
+
+char *substr(char *src,int pos,int len) {
+  char *dest=NULL;
+  if (len>0) {
+    dest = (char *) malloc(len+1);
+    strncat(dest,src+pos,len);
+  }
+  return dest;
+}
+
+char* exec_command(char* id_ia, char* command){
+    printf("%s\n", substr(command, 9, 14));
+    if (strcmp(substr(command, 0, 9), "identify|")) {
+        if (strlen(command) == 14 ) {
+            char* ia = substr(command, 9, 5);
+            printf("%s\n", ia);
+            printf("%s", id_ia);
+            return "MSG RECU";
+        }
+    }
+    // return command;
+    //     char* msg =
+    // } else if (/* condition */) {
+    //     /* code */
+    // } else {
+    //     /* code */
+    // }
+    return "";
+}

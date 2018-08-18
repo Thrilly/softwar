@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
 
 #define NOTIFICATION_CYCLE_INFO     1
 #define NOTIFICATION_GAME_STARTED   2
@@ -17,9 +18,11 @@
 #define NOTIFICATION_CLIENT_WIN     5
 
 #define LEFT                        0
-#define UP                          0
-#define RIGHT                       0
-#define DOWN                        0
+#define UP                          1
+#define RIGHT                       2
+#define DOWN                        3
+
+#define WAIT_BEFORE_START_SERVER    1
 
 typedef struct s_notification_type
 {
@@ -68,8 +71,11 @@ char*        get_player_list(Player *list);
 Player	    *delete_player(char* name, Player *list);
 int         edit_energy(char* name, int value, Player *list);
 int	        move(char* name, int direction, int value, int map_size, Player *list);
+int         destroy_players(Player *list);
 
 // Energy functions
 EnergyCell	*add_energy(EnergyCell *list, int x, int y, int value);
 EnergyCell	*delete_energy(int x, int y, EnergyCell *list);
 char* 	    get_energy_list(EnergyCell *list);
+int        destroy_energy(EnergyCell *list);
+char*        exec_command(char* id_ia, char* command);
