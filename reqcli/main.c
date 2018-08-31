@@ -10,10 +10,10 @@ int main(int argc, char *argv[])
 
     printf("Connecting to echo...\n");
     zsock_t *req = zsock_new(ZMQ_REQ);
-    zsock_set_identity(req, "test");
+    zsock_set_identity(req, "#0x01");
     zsock_connect(req, "tcp://localhost:%s", argv[1]);
 
-    while (1) {
+    while (!zsys_interrupted) {
         char str[100];
         printf("Enter command test : \n");
         fgets(str, 100, stdin);

@@ -44,7 +44,7 @@ int check_params(int argc, char *argv[])
         // *********** CYCLE ***********
         } else if(strcmp(argv[i],"--cycle") == 0) {
             if (argv[i+1] != NULL) { // control if params value exist
-                if (atoi(argv[i+1]) > 0 && atoi(argv[i+1]) <= 5000000) { // control data validity
+                if (atoi(argv[i+1]) >= 100000 && atoi(argv[i+1]) <= 5000000) { // control data validity
                     strcpy(CYCLE, argv[i+1]); // assing params
                 } else { // else print error
                     printfc("[FAIL] - Unable runing server : Cannot set this cycle interval, must be integer beetween 100000 and 5000000\n", "red");
@@ -113,17 +113,26 @@ int check_params(int argc, char *argv[])
         return 0;
     }
     fclose(f);
-
+    char logsStr[255];
+    logs(LOGS, "server", "Server starting instance", "INFO");
+    sprintf(logsStr, "Server params settings (req_port:%s,pubport:%s,cycle:%s,map_size:%s)", REQPORT, PUBPORT, CYCLE, MAPSIZE);
+    logs(LOGS, "server", logsStr, "INFO");
 
     if (VERBOSE == 1) {
         printf("[INFO] - Verbose mode actived \n");
         usleep(100000);
         printf("[INFO] - Serveur socket ROUTER listenning on tcp://*:%s \n", REQPORT);
         usleep(100000);
+        if (atoi(REQPORT) < 1000) {
+            printfc("[WARN] - It\'s recommanded to use port higher than 1000 for socket ROUTER\n", "yellow");
+            logs(LOGS, "server", "Socket port TCP setted under 1000 value", "WARN");
+            usleep(100000);
+        }
         printf("[INFO] - Serveur socket PUB listenning on tcp://*:%s \n", PUBPORT);
         usleep(100000);
         if (atoi(PUBPORT) < 1000) {
-            printfc("[WARN] - It\'s recommanded to use port higher than 1000\n", "yellow");
+            printfc("[WARN] - It\'s recommanded to use port higher than 1000 for socket PUB\n", "yellow");
+            logs(LOGS, "server", "Socket port TCP setted under 1000 value", "WARN");
             usleep(100000);
         }
         printf("[INFO] - Serveur notify by %s microsecondes cycle \n", CYCLE);
