@@ -218,18 +218,20 @@ char*	get_player_list(Player *list)
 	if (list != NULL) {
 		sprintf(json, " ");
 		int count = 0;
+		strcat(json, "{");
 		while (list != NULL)
 		{
 			if (count > 0) {
 				strcat(json, ",");
 			}
 			char* src = malloc(sizeof (char) * 256);
-			sprintf(src, "{\"name\": \"%s\", \"x\": %i, \"y\": %i, \"energy\": %i, \"looking\": %i}", list->name, list->x, list->y, list->energy, list->looking);
+			sprintf(src, "\"%i\" : {\"name\": \"%s\", \"x\": %i, \"y\": %i, \"energy\": %i, \"looking\": %i}", count, list->name, list->x, list->y, list->energy, list->looking);
 			strcat(json, src);
 			free(src);
 			list = list->next;
 			count++;
 		}
+		strcat(json, "}");
 	}
 	return json;
 }

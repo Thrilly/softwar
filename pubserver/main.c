@@ -58,13 +58,16 @@ int main(int argc, char *argv[])
             zframe_t *empty = zmsg_pop(message);
             zframe_t *content = zmsg_pop(message);
             char* command = zframe_strdup(content);
+            printf("%s | Command : %s\n", zframe_strdup(identity), command);
 
             // ******* IDENTITY ********
             if (strcmp(substr(command, 0, 9), "identify|") == 0) {
                 if (gameinfo.game_status == 0) {
-                    if ((int)strlen(command) == 15 ) {
+                    if ((int)strlen(command) >= 14 ) {
                         char* ia_name = substr(command, 9, 5);
+                        printf("%s\n", ia_name);
                         list_players = add_player(list_players, ia_name, atoi(MAPSIZE));
+                        printf("%i\n", list_players->return_code);
                         if (list_players->return_code == 0) {
                             strcat(resp_server, "ko|game full");
                             logs(LOGS, ia_name, "Attemting join full game", "WARN");
@@ -80,8 +83,8 @@ int main(int argc, char *argv[])
                             logs(LOGS, ia_name, "Cannot add player to list, addPlayer() return error code", "ERROR");
                         }
                     } else {
-                        strcat(resp_server, "ko|id too long");
-                        logs(LOGS, "server", "Attempting to join game with too long ID", "WARN");
+                        strcat(resp_server, "ko|null");
+                        logs(LOGS, "server", "Attempting to join game with bad ID", "WARN");
                     }
                 } else {
                     strcat(resp_server, "ko|game already started");
@@ -275,7 +278,6 @@ int main(int argc, char *argv[])
             }
 
             zmsg_destroy(&message);
-            printf("Content of message is : %s\n", command);
 
             zmsg_t *response = zmsg_new();
 
@@ -313,7 +315,7 @@ int main(int argc, char *argv[])
                     gameinfo.game_status = 1;
                     char *msgGameStarted = malloc(sizeof (char) * 1024);
                     msgGameStarted = notify(NOTIFICATION_GAME_STARTED, gameinfo, list_players, list_energy);
-                    zstr_sendf(chat_srv_socket, "#general: %s\n", msgGameStarted);
+                    zstr_sendf(chat_srv_socket, "#all: %s\n", msgGameStarted);
                     free(msgGameStarted);
                 }
             } else if (gameinfo.game_status == 0 && countPlayers != 4){
@@ -335,7 +337,7 @@ int main(int argc, char *argv[])
                         // tmp->next = delete_player(tmp->name, list_players);
                         char *msgClientDead = malloc(sizeof (char) * 1024);
                         msgClientDead = notify(NOTIFICATION_CLIENT_DEAD, gameinfo, NULL, NULL);
-                        zstr_sendf(socket, "#general: %s\n", msgClientDead);
+                        zstr_sendf(socket, "#all: %s\n", msgClientDead);
                         free(msgClientDead);
 
                     } else {
@@ -348,7 +350,7 @@ int main(int argc, char *argv[])
                     gameinfo.game_status = 2;
                     char *msgGameStarted = malloc(sizeof (char) * 1024);
                     msgGameStarted = notify(NOTIFICATION_GAME_FINISHED, gameinfo, list_players, list_energy);
-                    zstr_sendf(chat_srv_socket, "#general: %s\n", msgGameStarted);
+                    zstr_sendf(chat_srv_socket, "#all: %s\n", msgGameStarted);
                     free(msgGameStarted);
                     zsys_interrupted = true;
                 }
@@ -358,7 +360,7 @@ int main(int argc, char *argv[])
             char *msg = malloc(sizeof (char) * 1024);
             msg = notify(NOTIFICATION_CYCLE_INFO, gameinfo, list_players, list_energy);
             print_server_state(gameinfo.game_status, loop, atoi(PUBPORT), atoi(CYCLE), countPlayers, msg);
-            zstr_sendf(chat_srv_socket, "#general: %s\n", msg);
+            zstr_sendf(chat_srv_socket, "#all: %s\n", msg);
             free(msg);
         }
 
