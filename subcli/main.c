@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
   printf("Client connected to %s:%s\n", argv[1], argv[2]);
 
   zsock_set_subscribe(client, argv[3]);
-  zsock_set_subscribe(client, "#general:");
+  zsock_set_subscribe(client, "#all:");
 
   while (!zsys_interrupted) {
     char *message = zstr_recv(client);
